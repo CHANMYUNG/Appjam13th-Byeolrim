@@ -6,29 +6,30 @@ const secret = require('../../config').secret;
 const User = Schema({
     username: String,
     password: String,
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    }]
 }, {
-    collection: 'user'
+    collection: 'User'
 });
 
 // create new account
 User.statics.create = function (username, password) {
-    console.log('User.create()');
     const encrypted = crypto.createHmac('sha1', secret)
         .update(password)
         .digest('base64');
 
     const user = new this({
         username,
-        password: encrypted
+        password: encrypted,
+        posts: []
     })
-    console.log('User.create()');
     return user.save();
 }
 
 // find one user by username
 User.statics.findOneByUsername = function (username) {
-    console.log("findOneByUsername");
-    console.log(username);
     return this.findOne({
         username
     }).exec()
@@ -43,4 +44,10 @@ User.methods.verify = function (password) {
     return this.password === encrypted;
 }
 
-module.exports = mongoose.model('user', User);
+User.statics.getPostsById = function (_id) {
+
+    return this.findOne({
+        _id
+    }).populate('posts',['title', 'content', 'createdAt', 'isSecret']).exec();
+}
+module.exports = mongoose.model('User', User);

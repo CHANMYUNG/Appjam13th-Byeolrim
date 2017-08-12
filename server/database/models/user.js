@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const crypto = require('crypto');
 const secret = require('../../config').secret;
 
-let User = Schema({
+const User = Schema({
     username: String,
     password: String,
 }, {

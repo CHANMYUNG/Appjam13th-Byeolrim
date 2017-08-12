@@ -6,9 +6,7 @@ exports.register = (req, res) => {
         username,
         password
     } = req.body;
-
-    console.log(username)
-
+    
     let newUser = null;
 
     const create = (user) => {
